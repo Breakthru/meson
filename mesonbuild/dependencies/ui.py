@@ -281,6 +281,7 @@ class QtBaseDependency(ExternalDependency):
             (k, v) = tuple(line.split(':', 1))
             qvars[k] = v
         if mesonlib.is_osx():
+            print(qvars)
             self._framework_detect(qvars, mods, kwargs)
             return qmake
         incdir = qvars['QT_INSTALL_HEADERS']

@@ -694,6 +694,7 @@ class XCodeBackend(backends.Backend):
                         cd = os.path.join(d.curdir, sd)
                         headerdirs.append(os.path.join(self.environment.get_source_dir(), cd))
                         headerdirs.append(os.path.join(self.environment.get_build_dir(), cd))
+                print("headerdirs:" , headerdirs)
                 for l in target.link_targets:
                     abs_path = os.path.join(self.environment.get_build_dir(),
                                             l.subdir, buildtype, l.get_filename())
