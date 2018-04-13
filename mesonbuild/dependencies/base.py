@@ -917,7 +917,7 @@ class ExtraFrameworkDependency(ExternalDependency):
 
     def get_link_args(self):
         if self.found():
-            return ['-F' + self.path, '-framework', self.name.split('.')[0]]
+            return ['-F' + self.path, '-framework', self.name.split('.')[0], '-Wl,-rpath,' + self.path]
         return []
 
     def get_version(self):
