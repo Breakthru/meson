@@ -803,12 +803,16 @@ This will become a hard error in a future Meson release.''')
     def get_extra_args(self, language):
         return self.extra_args.get(language, [])
 
-    def get_dependencies(self):
+    def get_dependencies(self, exclude=None):
         transitive_deps = []
+        if exclude is None:
+            exclude = []
         for t in itertools.chain(self.link_targets, self.link_whole_targets):
+            if t in transitive_deps or t in exclude:
+                continue
             transitive_deps.append(t)
             if isinstance(t, StaticLibrary):
-                transitive_deps += t.get_dependencies()
+                transitive_deps += t.get_dependencies(transitive_deps + exclude)
         return transitive_deps
 
     def get_source_subdir(self):
@@ -851,13 +855,14 @@ This will become a hard error in a future Meson release.''')
                     self.link(l)
                 for l in dep.whole_libraries:
                     self.link_whole(l)
-                # Those parts that are external.
-                extpart = dependencies.InternalDependency('undefined',
-                                                          [],
-                                                          dep.compile_args,
-                                                          dep.link_args,
-                                                          [], [], [], [])
-                self.external_deps.append(extpart)
+                if dep.compile_args or dep.link_args:
+                    # Those parts that are external.
+                    extpart = dependencies.InternalDependency('undefined',
+                                                              [],
+                                                              dep.compile_args,
+                                                              dep.link_args,
+                                                              [], [], [], [])
+                    self.external_deps.append(extpart)
                 # Deps of deps.
                 self.add_deps(dep.ext_deps)
             elif isinstance(dep, dependencies.Dependency):
