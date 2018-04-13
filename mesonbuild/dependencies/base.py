@@ -895,7 +895,6 @@ class ExtraFrameworkDependency(ExternalDependency):
             for d in os.listdir(p):
                 fullpath = os.path.join(p, d)
                 headerpath = os.path.join(fullpath, 'Headers')
-                print(d.split('.'))
                 if lname != d.split('.')[0].lower():
                     continue
                 if not stat.S_ISDIR(os.stat(fullpath).st_mode):
